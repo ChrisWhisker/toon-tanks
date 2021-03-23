@@ -33,6 +33,7 @@ void UHealthComponent::TakeDamage(
 	}
 
 	Health = FMath::Clamp(Health - Damage, 0.f, DefaultHealth);
+	UE_LOG(LogTemp, Warning, TEXT("%s's health is %f"), *GetOwner()->GetName(), Health);
 
 	if (Health <= 0)
 	{

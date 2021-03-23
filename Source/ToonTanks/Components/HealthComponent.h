@@ -15,7 +15,7 @@ class TOONTANKS_API UHealthComponent : public UActorComponent
 
 private:
 	UPROPERTY(EditAnywhere)
-	float DefaultHealth = 100.f;
+	float DefaultHealth = 200.f;
 	float Health = 0.0f;
 
 	ATankGameModeBase* GameModeRef;
