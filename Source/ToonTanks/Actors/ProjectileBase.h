@@ -34,6 +34,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 	float Damage = 50;
 
+	UPROPERTY(EditAnywhere, Category = "Effects" /*, meta = (AllowPrivateAccess = "true")*/)
+	UParticleSystem* HitParticle;
+
 	// UFUNCTION Exposes the function to Unreal
 	// TODO is this overriding???
 	UFUNCTION()
