@@ -14,6 +14,7 @@ class TOONTANKS_API AProjectileBase : public AActor
 	GENERATED_BODY()
 
 private:
+	// ==== Components ====
 	// VisibleAnywhere means it is read-only in all property windows
 	// BlueprintReadOnly means the variable is available as read-only within the blueprint event graph
 	// meta = (AllowPrivateAccess = "true") allows private variables to be accessible to blueprints
@@ -23,6 +24,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* ProjectileMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* ParticleTrail;
+
+	// ==== Variables ====
 	// EditDefaultsOnly means it's editable only on blueprints (not instances of the blueprint).
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	TSubclassOf<UDamageType> DamageType;
@@ -34,8 +39,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 	float Damage = 50;
 
-	UPROPERTY(EditAnywhere, Category = "Effects" /*, meta = (AllowPrivateAccess = "true")*/)
+	UPROPERTY(EditAnywhere, Category = "Effects", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* HitParticle;
+
+	// ==== Functions ====
 
 	// UFUNCTION Exposes the function to Unreal
 	// TODO is this overriding???
