@@ -20,10 +20,8 @@ private:
 	// meta = (AllowPrivateAccess = "true") allows private variables to be accessible to blueprints
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* ProjectileMesh;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UParticleSystemComponent* ParticleTrail;
 
@@ -31,16 +29,19 @@ private:
 	// EditDefaultsOnly means it's editable only on blueprints (not instances of the blueprint).
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	TSubclassOf<UDamageType> DamageType;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage", meta = (AllowPrivateAccess = "true"))
+	float Damage = 50;
 
 	// EditAnywhere means it can be edited in propoerty windows, blueprints, and instances
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float MovementSpeed = 1300.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage", meta = (AllowPrivateAccess = "true"))
-	float Damage = 50;
-
-	UPROPERTY(EditAnywhere, Category = "Effects", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = "Effects")
 	UParticleSystem* HitParticle;
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	USoundBase* HitSound;
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	USoundBase* LaunchSound;
 
 	// ==== Functions ====
 
