@@ -20,7 +20,7 @@ void UHealthComponent::BeginPlay()
 	Health = DefaultHealth;
 	GameModeRef = Cast<ATankGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 	// dynamic binding. this means that when the system-built OnTakeAnyDamage() function is called on the owner,
-	// TakeDamage() is also called.
+	// TakeDamage() is also called. Should be done in BeginPlay().
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
 }
 

@@ -6,8 +6,11 @@
 #include "CoreMinimal.h"
 #include "HealthComponent.generated.h"
 
+// This is a forward declaration. Do this instead of including the header file when the class members aren't needed in
+// this header file. This prevents circular dependency.
 class ATankGameModeBase;
 
+// HealthComponent is an ActorComponent, meaning it has no transform in the world
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TOONTANKS_API UHealthComponent : public UActorComponent
 {
@@ -21,11 +24,9 @@ private:
 	ATankGameModeBase* GameModeRef;
 
 public:
-	// Sets default values for this component's properties
 	UHealthComponent();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	UFUNCTION()

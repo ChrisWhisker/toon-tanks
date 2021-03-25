@@ -11,11 +11,14 @@
 // Sets default values
 AProjectileBase::AProjectileBase()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	// CreateDefaultSubobject<>() creates the actual component on this actor. Should be done in the constructor.
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
+	// This line is declaring a dynamic delegate. It is saying that when the ProjectileMesh's OnComponentHit event is
+	// called, the function in parentheses should be called as well.
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
+	// Sets the ProjectileMesh as the top of the component hierarchy on this actor.
 	RootComponent = ProjectileMesh;
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
@@ -24,6 +27,7 @@ AProjectileBase::AProjectileBase()
 	InitialLifeSpan = 3.f;
 
 	ParticleTrail = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle Trail"));
+	// SetupAttachment() is making ParticleTrail a child component of RootComponent.
 	ParticleTrail->SetupAttachment(RootComponent);
 }
 
@@ -31,6 +35,7 @@ AProjectileBase::AProjectileBase()
 void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
+	// Play a 3d soound in world space that remains at this location as opposed to SpawnSoundAttached.
 	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 }
 
@@ -46,6 +51,11 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 
 	if (OtherActor && OtherActor != this && OtherActor != MyOwner)
 	{
+		// This line applies damage to OtherActor
+		// float Damage is the amount of damage.
+		// instigated by the owner's pawn
+		// cause by this actor (projectile)
+		// The damage is of type DamageType.
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, DamageType);
 		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation());
 
@@ -56,6 +66,8 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 			GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(HitShake);
 		}
+
+		// Completely delete this actor
 		Destroy();
 	}
 }

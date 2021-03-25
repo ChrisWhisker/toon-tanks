@@ -42,11 +42,11 @@ private:
 	USoundBase* HitSound;
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	USoundBase* LaunchSound;
+	// TSubclassOf<> is a template that lets you specify the variable is a specific class or subclass of it.
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	TSubclassOf<UCameraShake> HitShake;
 
 	// ==== Functions ====
-
 	// UFUNCTION Exposes the function to Unreal
 	// TODO is this overriding???
 	UFUNCTION()
