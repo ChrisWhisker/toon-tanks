@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Sound/SoundBase.h"
+#include "ToonTanks/Pawns/PawnBase.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -47,8 +48,14 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, DamageType);
 		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation());
-		UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
-		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(HitShake);
+
+		APawnBase* HitPawn = Cast<APawnBase>(OtherActor);
+
+		if (HitPawn)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+			GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(HitShake);
+		}
 		Destroy();
 	}
 }

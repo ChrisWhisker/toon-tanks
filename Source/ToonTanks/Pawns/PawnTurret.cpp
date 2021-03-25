@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PawnTurret.h"
+#include "Components/SceneComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "PawnTank.h"
 
@@ -23,7 +24,19 @@ void APawnTurret::Tick(float DeltaTime)
 		return;
 	}
 
-	RotateTurret(PlayerPawn->GetActorLocation());
+	FHitResult TraceHitResult;
+	GetWorld()->LineTraceSingleByChannel(
+		TraceHitResult, ProjectileSpawnPoint->GetComponentLocation(), PlayerPawn->GetActorLocation(), ECC_Visibility);
+
+	UE_LOG(LogTemp, Warning, TEXT("%s seen"), *TraceHitResult.GetActor()->GetName());
+
+	APawnTank* PlayerSeen = Cast<APawnTank>(TraceHitResult.GetActor());
+
+	if (PlayerSeen)
+	{
+		RotateTurret(PlayerPawn->GetActorLocation());
+		// UE_LOG(LogTemp, Warning, TEXT("%s seen"), *PlayerSeen->GetName());
+	}
 }
 
 void APawnTurret::CheckFireCondition()
@@ -41,7 +54,7 @@ void APawnTurret::CheckFireCondition()
 
 float APawnTurret::ReturnDistanceToPlayer()
 {
-	if (!PlayerPawn) // also check if the player is alive
+	if (!PlayerPawn || !PlayerPawn->GetIsPlayerAlive())
 	{
 		return 0.f;
 	}
