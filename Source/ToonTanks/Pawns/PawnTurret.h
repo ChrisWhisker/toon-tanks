@@ -17,7 +17,7 @@ private:
 	void CheckFireCondition();
 	float ReturnDistanceToPlayer();
 
-	FTimerHandle FireRateTimerHandle;
+	FTimerHandle FireRateTimerHandle; // Unique identifier for the timer
 	APawnTank* PlayerPawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))

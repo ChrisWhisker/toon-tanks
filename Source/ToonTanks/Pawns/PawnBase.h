@@ -29,24 +29,19 @@ private:
 	// Variables
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AProjectileBase> ProjectileClass;
-
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	UParticleSystem* DeathParticle;
-
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	USoundBase* DeathSound;
-
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	TSubclassOf<UCameraShake> DeathShake;
 
 public:
-	// Sets default values for this pawn's properties
 	APawnBase();
 	virtual void HandleDestruction();
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components",
-		meta = (AllowPrivateAccess = "true")) // possible issue leaving the meta here
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* ProjectileSpawnPoint;
 
 	void RotateTurret(FVector LookAtTarget);

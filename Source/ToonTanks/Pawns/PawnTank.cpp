@@ -4,6 +4,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
+#define OUT
+
 APawnTank::APawnTank()
 {
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
@@ -13,27 +15,26 @@ APawnTank::APawnTank()
 	Camera->SetupAttachment(SpringArm);
 }
 
-// Called when the game starts or when spawned
 void APawnTank::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Necessary in order to accept player input
 	PlayerControllerRef = Cast<APlayerController>(GetController());
 }
 
-// Called every frame
 void APawnTank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	Rotate();
 	Move();
 
 	if (PlayerControllerRef)
 	{
 		FHitResult TraceHitResult;
-		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, TraceHitResult);
-		FVector HitLocation = TraceHitResult.ImpactPoint;
+		// Perform a line trace from the camera in the direction of the cursor on screen
+		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, OUT TraceHitResult);
+		FVector HitLocation = TraceHitResult.ImpactPoint; // ImpactPoint is the actual location of the hit.
 		RotateTurret(HitLocation);
 	}
 }
@@ -42,6 +43,7 @@ void APawnTank::Tick(float DeltaTime)
 void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	// Bind input from project settings directly to functions. The Value argument is implicitly passed.
 	PlayerInputComponent->BindAxis("MoveForward", this, &APawnTank::CalculateMoveInput);
 	PlayerInputComponent->BindAxis("Turn", this, &APawnTank::CalculateRotateInput);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APawnTank::Fire);
@@ -72,13 +74,12 @@ void APawnTank::Rotate()
 void APawnTank::HandleDestruction()
 {
 	Super::HandleDestruction();
-	// hide player in a new function
 	bIsPlayerAlive = false;
-	SetActorHiddenInGame(true);
-	SetActorTickEnabled(false);
+	SetActorHiddenInGame(true); // Hide the entire actor
+	SetActorTickEnabled(false); // Stop ticking to save resources
 }
 
-bool APawnTank::GetIsPlayerAlive()
+bool APawnTank::GetIsPlayerAlive() // Getter but not setter provided to keep bIsPlayerAlive read-only.
 {
 	return bIsPlayerAlive;
 }

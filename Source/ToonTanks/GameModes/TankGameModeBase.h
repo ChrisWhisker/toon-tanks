@@ -1,5 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -11,6 +10,7 @@ class APawnTurret;
 class APawnTank;
 class APlayerControllerBase;
 
+// A game mode defines the game being played. It governs the game rules, scoring, etc.
 UCLASS()
 class TOONTANKS_API ATankGameModeBase : public AGameModeBase
 {
@@ -32,8 +32,10 @@ protected:
 	int32 StartDelay = 3;
 
 	virtual void BeginPlay() override;
+
+	// These two functions don't need to be implemented in C++ because they are implemented in the child blueprint
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameStart();
 	UFUNCTION(BlueprintImplementableEvent)
-	void GameOver(bool PlayerWon);
+	void GameOver(bool bPlayerWon);
 };

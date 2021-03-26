@@ -6,9 +6,6 @@
 #include "GameFramework/PlayerController.h"
 #include "PlayerControllerBase.generated.h"
 
-/**
- *
- */
 UCLASS()
 class TOONTANKS_API APlayerControllerBase : public APlayerController
 {

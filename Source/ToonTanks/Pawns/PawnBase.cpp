@@ -6,10 +6,8 @@
 #include "ToonTanks/Actors/ProjectileBase.h"
 #include "ToonTanks/Components/HealthComponent.h"
 
-// Sets default values
 APawnBase::APawnBase()
 {
-	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Collider"));
@@ -25,10 +23,13 @@ APawnBase::APawnBase()
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
+	// SetupAttachment() isn't called because HealthComponent is an actor component (not a scene component) so it isn't
+	// in the component hierarchy.
 }
 
 void APawnBase::RotateTurret(FVector LookAtTarget)
 {
+	// Cleaned here indicates that the pitch (z) won't be changed.
 	FVector LookAtTargetCleaned = FVector(LookAtTarget.X, LookAtTarget.Y, TurretMesh->GetComponentLocation().Z);
 	FVector StartLocation = TurretMesh->GetComponentLocation();
 	FRotator TurretRotation = FVector(LookAtTargetCleaned - StartLocation).Rotation();
@@ -42,6 +43,7 @@ void APawnBase::Fire()
 		FVector SpawnLocation = ProjectileSpawnPoint->GetComponentLocation();
 		FRotator SpawnRotation = ProjectileSpawnPoint->GetComponentRotation();
 
+		// Spawn a ProjectileClass instance at the provided location and rotation.
 		AProjectileBase* TempProjectile =
 			GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation);
 		TempProjectile->SetOwner(this);
@@ -50,7 +52,7 @@ void APawnBase::Fire()
 
 void APawnBase::HandleDestruction()
 {
-	UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
+	UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation()); // Spawn the particle emitter
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
 	GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(DeathShake);
 }

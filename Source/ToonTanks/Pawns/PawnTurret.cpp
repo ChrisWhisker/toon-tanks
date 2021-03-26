@@ -5,37 +5,36 @@
 #include "Kismet/GameplayStatics.h"
 #include "PawnTank.h"
 
-// Called when the game starts or when spawned
+#define OUT
+
 void APawnTurret::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Starts the repeating timer to call CheckFireCondition() every [FireRate] seconds
 	GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this, &APawnTurret::CheckFireCondition, FireRate, true);
 	PlayerPawn = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
 }
 
-// Called every frame
 void APawnTurret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!PlayerPawn || ReturnDistanceToPlayer() > FireRange)
+	if (!PlayerPawn || ReturnDistanceToPlayer() > FireRange) // Nothing to fire at or player is out of range
 	{
 		return;
 	}
 
+	// Make sure walls aren't blocking the turret's sight of the player (probably shouldn't be done in tick)
 	FHitResult TraceHitResult;
-	GetWorld()->LineTraceSingleByChannel(
-		TraceHitResult, ProjectileSpawnPoint->GetComponentLocation(), PlayerPawn->GetActorLocation(), ECC_Visibility);
-
-	UE_LOG(LogTemp, Warning, TEXT("%s seen"), *TraceHitResult.GetActor()->GetName());
+	GetWorld()->LineTraceSingleByChannel(OUT TraceHitResult, ProjectileSpawnPoint->GetComponentLocation(),
+		PlayerPawn->GetActorLocation(), ECC_Visibility);
 
 	APawnTank* PlayerSeen = Cast<APawnTank>(TraceHitResult.GetActor());
 
-	if (PlayerSeen)
+	if (PlayerSeen) // if the first object hit by the turret's line of sight is the player
 	{
 		RotateTurret(PlayerPawn->GetActorLocation());
-		// UE_LOG(LogTemp, Warning, TEXT("%s seen"), *PlayerSeen->GetName());
 	}
 }
 
